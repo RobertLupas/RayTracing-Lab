@@ -3,6 +3,9 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
+#include "color.h"
+#include "vec3.h"
+
 using namespace std;
 
 int main()
@@ -18,18 +21,14 @@ int main()
     for (int j = 0; j < image_height; j++) {
         clog << "\rScanlines Remaining: " << (image_height - j) << ' ' << flush;
         for (int i = 0; i < image_width; i++) {
-            auto r = double(i) / (image_width - 1);
-            auto g = double(j) / (image_height - 1);
-            auto b = 0.7;
+            // Calculate the color for this pixel
+            auto pixel_color = color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0.7);
 
-            int ir = int(255.999 * r);
-            int ig = int(255.999 * g);
-            int ib = int(255.999 * b);
+            // Calculate the index in the buffer for this pixel
+            int index = 3 * (j * image_width + i);
 
-            // Store the pixel data in the buffer
-            image_data[3 * (j * image_width + i) + 0] = ir;
-            image_data[3 * (j * image_width + i) + 1] = ig;
-            image_data[3 * (j * image_width + i) + 2] = ib;
+            // Write the color to the buffer
+            write_color(image_data.data(), index, pixel_color);
         }
     }
 
