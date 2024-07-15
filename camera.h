@@ -1,4 +1,5 @@
 #include <vector>
+#include <iomanip> // std::setprecision
 
 #ifndef CAMERA_H
 #define CAMERA_H
@@ -25,6 +26,11 @@ public:
 	double focus_dist = 10;    // Distance from camera lookfrom point to plane of perfect focus
 
 	void render(const hittable& world) {
+		// Used for measuring rendering time
+		time_t start, end;
+		time(&start);
+		ios_base::sync_with_stdio(false);
+
 		initialize();
 
 		// Create a buffer to hold the image data
@@ -47,7 +53,10 @@ public:
 			}
 		}
 
-		std::clog << "\rRender done.                 \n";
+		time(&end);
+		double time_taken = double(end - start);
+
+		std::clog << "\rRender done in " << fixed << time_taken << setprecision(5) << ".                 \n";
 
 		if (stbi_write_png("image.png", image_width, image_height, 3, image_data.data(), image_width * 3)) {
 			clog << "\nImage written to image.png\n";
