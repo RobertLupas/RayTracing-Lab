@@ -14,6 +14,7 @@ public:
 	int    image_width = 100;  // Rendered image width in pixel count
 	int    samples_per_pixel = 10;   // Count of random samples for each pixel
 	int    max_depth = 10;   // Maximum number of ray bounces into scene
+	double ray_reflectance = 0.5; // Reflectance of the ray_color function
 
 	void render(const hittable& world) {
 		initialize();
@@ -112,7 +113,7 @@ private:
 
 		if (world.hit(r, interval(0.001, infinity), rec)) {
 			vec3 direction = rec.normal + random_unit_vector();
-			return 0.5 * ray_color(ray(rec.p, direction), depth - 1, world);
+			return ray_reflectance * ray_color(ray(rec.p, direction), depth - 1, world);
 		}
 
 		vec3 unit_direction = unit_vector(r.direction());
