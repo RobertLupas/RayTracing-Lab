@@ -1,5 +1,6 @@
 #include <vector>
 #include <iomanip> // std::setprecision
+#include <omp.h>
 
 #ifndef CAMERA_H
 #define CAMERA_H
@@ -36,8 +37,12 @@ public:
 		// Create a buffer to hold the image data
 		std::vector<unsigned char> image_data(image_width * image_height * 3);
 
+		#pragma omp parallel for schedule(dynamic)
 		for (int j = 0; j < image_height; j++) {
-			std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
+			if (j % 10 == 0) {
+				std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
+			}			
+			
 			for (int i = 0; i < image_width; i++) {
 				color pixel_color(0, 0, 0);
 				for (int sample = 0; sample < samples_per_pixel; sample++) {
@@ -116,7 +121,7 @@ private:
 
 	ray get_ray(int i, int j) const {
 		// Construct a camera ray originating from the defocus disk and directed at a randomly
-        // sampled point around the pixel location i, j.
+		// sampled point around the pixel location i, j.
 
 		auto offset = sample_square();
 		auto pixel_sample = pixel00_loc
