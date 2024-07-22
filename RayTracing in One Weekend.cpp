@@ -9,10 +9,10 @@
 #include "sphere.h"
 
 // Function to configure and add a sphere to the world based on user input
-void configureScene(hittable_list& world, bool automatic) {
-	switch (automatic)
+void configureScene(hittable_list& world, bool manual) {
+	switch (manual)
 	{
-	case true:
+	case true: {
 		// User input for sphere properties
 		std::cout << "Enter sphere properties:\n";
 
@@ -63,6 +63,21 @@ void configureScene(hittable_list& world, bool automatic) {
 		world.add(std::make_shared<sphere>(center, radius, sphereMaterial));
 		break;
 	}
+	case false: {
+		auto material_ground = make_shared<lambertian>(color(0.4, 0.2, 0.6));
+		auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
+		auto material_left = make_shared<dielectric>(1.50);
+		auto material_air_bubble = make_shared<dielectric>(1.00 / 1.50);
+		auto material_right = make_shared<metal>(color(0.8, 0.3, 0.4), 1.0);
+
+		world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
+		world.add(make_shared<sphere>(point3(0.0, 0.0, -1.2), 0.5, material_center));
+		world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
+		world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.4, material_air_bubble));
+		world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
+		break;
+	}
+	}
 }
 
 int main() {
@@ -72,8 +87,8 @@ int main() {
 	world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
 
 	// Configure the scene based on user input
-	bool automatic = true;
-	configureScene(world, automatic);
+	bool manual = false;
+	configureScene(world, manual);
 
 	camera cam;
 
