@@ -8,6 +8,7 @@
 #include "material.h"
 #include "sphere.h"
 #include "cube.h"
+#include "plane.h"
 
 // Function to configure and add a sphere to the world based on user input
 void configureScene(hittable_list& world, bool manual) {
@@ -65,14 +66,14 @@ void configureScene(hittable_list& world, bool manual) {
 		break;
 	}
 	case false: {
-		auto material_ground = make_shared<lambertian>(color(0.4, 0.2, 0.6));
+		auto material_ground = make_shared<lambertian>(color(0.1, 0.6, 0.1));
 		auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
 
-		world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
+		world.add(make_shared<plane>(point3(0, 0, 0), vec3(0, 1, 0), material_ground));
 		world.add(make_shared<cube>(point3(-0.5, -0.5, -0.5), point3(0.5, 0.5, 0.5), material_center));
 
 		world.add(make_shared<sphere>(point3(0.0, 0.0, 0.0), 0.5, material_center));
-
+		
 		break;
 	}
 	}
@@ -92,12 +93,12 @@ int main() {
 
 	cam.aspect_ratio = 16.0 / 9.0;
 	cam.image_width = 400;
-	cam.samples_per_pixel = 50;
+	cam.samples_per_pixel = 100;
 	cam.max_depth = 50;
 
 	cam.vfov = 20;
-	cam.lookfrom = point3(4, 4, 4);
-	cam.lookat = point3(0, 0, 0);
+	cam.lookfrom = point3(3, 1.2, 4);
+	cam.lookat = point3(0, 0.6, 0);
 	cam.vup = vec3(0, 1, 0);
 
 	cam.defocus_angle = 1.0;

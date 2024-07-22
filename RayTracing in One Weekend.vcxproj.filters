@@ -53,5 +53,8 @@
     <ClInclude Include="cube.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="plane.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
