@@ -66,10 +66,8 @@ void configureScene(hittable_list& world, bool manual) {
 		break;
 	}
 	case false: {
-		auto material_ground = make_shared<lambertian>(color(0.1, 0.6, 0.1));
 		auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
 
-		world.add(make_shared<plane>(vec3(0, 0, 0), vec3(0, 1, 0), material_ground));
 		world.add(make_shared<cube>(vec3(-0.5, -0.5, -0.5), vec3(0.5, 0.5, 0.5), material_center));
 
 		world.add(make_shared<sphere>(vec3(0.0, 0.0, 0.0), 0.5, material_center));
@@ -82,8 +80,8 @@ void configureScene(hittable_list& world, bool manual) {
 int main() {
 	hittable_list world;
 
-	auto material_ground = make_shared<lambertian>(color(0.4, 0.2, 0.6));
-	world.add(make_shared<sphere>(vec3(0.0, -100.5, -1.0), 100.0, material_ground));
+	auto material_ground = make_shared<lambertian>(color(0.1, 0.6, 0.1));
+	world.add(make_shared<plane>(vec3(0, 0, 0), vec3(0, 1, 0), material_ground));
 
 	// Configure the scene based on user input
 	bool manual = false;
