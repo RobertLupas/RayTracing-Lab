@@ -5,7 +5,7 @@
 
 class cube : public hittable {
 public:
-    cube(const point3& min, const point3& max, shared_ptr<material> mat)
+    cube(const vec3& min, const vec3& max, shared_ptr<material> mat)
         : min(min), max(max), mat(mat) {}
 
     bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
@@ -41,8 +41,8 @@ public:
     }
 
 private:
-    point3 min;
-    point3 max;
+    vec3 min;
+    vec3 max;
     shared_ptr<material> mat;
 };
 

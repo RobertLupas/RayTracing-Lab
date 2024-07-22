@@ -19,8 +19,8 @@ public:
 	int    max_depth = 10;   // Maximum number of ray bounces into scene
 
 	double vfov = 90;  // Vertical view angle (field of view)
-	point3 lookfrom = point3(0, 0, 0);   // Point camera is looking from
-	point3 lookat = point3(0, 0, -1);  // Point camera is looking at
+	vec3 lookfrom = vec3(0, 0, 0);   // Point camera is looking from
+	vec3 lookat = vec3(0, 0, -1);  // Point camera is looking at
 	vec3   vup = vec3(0, 1, 0);     // Camera-relative "up" direction
 
 	double defocus_angle = 0;  // Variation angle of rays through each pixel
@@ -74,8 +74,8 @@ public:
 private:
 	int    image_height;   // Rendered image height
 	double pixel_samples_scale;  // Color scale factor for a sum of pixel samples
-	point3 center;         // Camera center
-	point3 pixel00_loc;    // Location of pixel 0, 0
+	vec3 center;         // Camera center
+	vec3 pixel00_loc;    // Location of pixel 0, 0
 	vec3   pixel_delta_u;  // Offset to pixel to the right
 	vec3   pixel_delta_v;  // Offset to pixel below
 	vec3   u, v, w;              // Camera frame basis vectors
@@ -140,7 +140,7 @@ private:
 		return vec3(random_double() - 0.5, random_double() - 0.5, 0);
 	}
 
-	point3 defocus_disk_sample() const {
+	vec3 defocus_disk_sample() const {
 		// Returns a random point in the camera defocus disk.
 		auto p = random_in_unit_disk();
 		return center + (p[0] * defocus_disk_u) + (p[1] * defocus_disk_v);

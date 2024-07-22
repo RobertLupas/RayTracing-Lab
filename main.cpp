@@ -19,7 +19,7 @@ void configureScene(hittable_list& world, bool manual) {
 		std::cout << "Enter sphere properties:\n";
 
 		// Sphere position
-		point3 center;
+		vec3 center;
 		std::cout << "Center (x y z): ";
 		double x, y, z;
 		std::cin >> x >> y >> z;
@@ -69,10 +69,10 @@ void configureScene(hittable_list& world, bool manual) {
 		auto material_ground = make_shared<lambertian>(color(0.1, 0.6, 0.1));
 		auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
 
-		world.add(make_shared<plane>(point3(0, 0, 0), vec3(0, 1, 0), material_ground));
-		world.add(make_shared<cube>(point3(-0.5, -0.5, -0.5), point3(0.5, 0.5, 0.5), material_center));
+		world.add(make_shared<plane>(vec3(0, 0, 0), vec3(0, 1, 0), material_ground));
+		world.add(make_shared<cube>(vec3(-0.5, -0.5, -0.5), vec3(0.5, 0.5, 0.5), material_center));
 
-		world.add(make_shared<sphere>(point3(0.0, 0.0, 0.0), 0.5, material_center));
+		world.add(make_shared<sphere>(vec3(0.0, 0.0, 0.0), 0.5, material_center));
 		
 		break;
 	}
@@ -83,7 +83,7 @@ int main() {
 	hittable_list world;
 
 	auto material_ground = make_shared<lambertian>(color(0.4, 0.2, 0.6));
-	world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
+	world.add(make_shared<sphere>(vec3(0.0, -100.5, -1.0), 100.0, material_ground));
 
 	// Configure the scene based on user input
 	bool manual = false;
@@ -97,8 +97,8 @@ int main() {
 	cam.max_depth = 50;
 
 	cam.vfov = 20;
-	cam.lookfrom = point3(3, 1.2, 4);
-	cam.lookat = point3(0, 0.6, 0);
+	cam.lookfrom = vec3(3, 1.2, 4);
+	cam.lookat = vec3(0, 0.6, 0);
 	cam.vup = vec3(0, 1, 0);
 
 	cam.defocus_angle = 1.0;
