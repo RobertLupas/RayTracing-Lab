@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\hittables">
+      <UniqueIdentifier>{6df1985b-5f81-4db8-82a4-429d50ab3cdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utilities">
+      <UniqueIdentifier>{b9b2bd3e-68b0-4369-8b98-aa66d5a71f4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera">
+      <UniqueIdentifier>{0d0b4705-e1f8-4658-a46e-c8b60f55013c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\materials">
+      <UniqueIdentifier>{a86c14cd-8b48-45f5-861b-4ab4234b1487}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -20,41 +32,41 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="vec3.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="color.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="hittable.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="cube.h">
+      <Filter>Source Files\hittables</Filter>
     </ClInclude>
     <ClInclude Include="sphere.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="hittable_list.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utilities.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="interval.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="material.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\hittables</Filter>
     </ClInclude>
     <ClInclude Include="plane.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\hittables</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities.h">
+      <Filter>Source Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="vec3.h">
+      <Filter>Source Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="interval.h">
+      <Filter>Source Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="color.h">
+      <Filter>Source Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Source Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ray.h">
+      <Filter>Source Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="hittable_list.h">
+      <Filter>Source Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="hittable.h">
+      <Filter>Source Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>Source Files\materials</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
