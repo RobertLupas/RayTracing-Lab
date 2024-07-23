@@ -1,6 +1,5 @@
 #include <vector>
 #include <iomanip> // std::setprecision
-#include <omp.h>
 
 #ifndef CAMERA_H
 #define CAMERA_H
@@ -37,7 +36,6 @@ public:
 		// Create a buffer to hold the image data
 		std::vector<unsigned char> image_data(image_width * image_height * 3);
 
-		#pragma omp parallel for schedule(dynamic)
 		for (int j = 0; j < image_height; j++) {
 			if (j % 10 == 0) {
 				std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
