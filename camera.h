@@ -1,6 +1,9 @@
 #include <vector>
 #include <iomanip> // std::setprecision
 
+#include <thread>
+#include <mutex>
+
 #ifndef CAMERA_H
 #define CAMERA_H
 
@@ -36,24 +39,48 @@ public:
 		// Create a buffer to hold the image data
 		std::vector<unsigned char> image_data(image_width * image_height * 3);
 
-		for (int j = 0; j < image_height; j++) {
-			if (j % 10 == 0) {
-				std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
-			}			
-			
-			for (int i = 0; i < image_width; i++) {
-				color pixel_color(0, 0, 0);
-				for (int sample = 0; sample < samples_per_pixel; sample++) {
-					ray r = get_ray(i, j);
-					pixel_color += ray_color(r, max_depth, world);
+		// Mutex for synchronizing access to the image buffer
+		std::mutex image_mutex;
+
+		// Function to render a chunk of the image
+		auto render_chunk = [&](int start_row, int end_row) {
+			for (int j = start_row; j < end_row; j++) {
+				if (j % 10 == 0) {
+					std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
 				}
 
-				// Calculate the index in the buffer for this pixel
-				int index = 3 * (j * image_width + i);
+				for (int i = 0; i < image_width; i++) {
+					color pixel_color(0, 0, 0);
+					for (int sample = 0; sample < samples_per_pixel; sample++) {
+						ray r = get_ray(i, j);
+						pixel_color += ray_color(r, max_depth, world);
+					}
 
-				// Write the color to the buffer
-				write_color(image_data.data(), index, pixel_samples_scale * pixel_color);
+					// Calculate the index in the buffer for this pixel
+					int index = 3 * (j * image_width + i);
+
+					// Write the color to the buffer
+					std::lock_guard<std::mutex> lock(image_mutex);
+					write_color(image_data.data(), index, pixel_samples_scale * pixel_color);
+				}
 			}
+			};
+
+		// Determine the number of threads to use
+		int num_threads = std::thread::hardware_concurrency();
+		int chunk_size = image_height / num_threads;
+
+		// Create and launch threads
+		std::vector<std::thread> threads;
+		for (int t = 0; t < num_threads; t++) {
+			int start_row = t * chunk_size;
+			int end_row = (t == num_threads - 1) ? image_height : start_row + chunk_size;
+			threads.emplace_back(render_chunk, start_row, end_row);
+		}
+
+		// Join threads
+		for (auto& thread : threads) {
+			thread.join();
 		}
 
 		time(&end);
