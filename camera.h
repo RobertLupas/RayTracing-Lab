@@ -43,12 +43,11 @@ public:
 		std::mutex image_mutex;
 
 		// Function to render a chunk of the image
+		std::mutex log_mutex;
+		std::atomic<int> scanlines_processed(0);
+
 		auto render_chunk = [&](int start_row, int end_row) {
 			for (int j = start_row; j < end_row; j++) {
-				if (j % 10 == 0) {
-					std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
-				}
-
 				for (int i = 0; i < image_width; i++) {
 					color pixel_color(0, 0, 0);
 					for (int sample = 0; sample < samples_per_pixel; sample++) {
@@ -63,8 +62,18 @@ public:
 					std::lock_guard<std::mutex> lock(image_mutex);
 					write_color(image_data.data(), index, pixel_samples_scale * pixel_color);
 				}
+
+				// Update the atomic counter
+				scanlines_processed++;
+
+				// Calculate and display the percentage of completion
+				if (j % 10 == 0) {
+					std::lock_guard<std::mutex> lock(log_mutex);
+					double percentage = (100.0 * scanlines_processed) / image_height;
+					std::clog << "\rProgress: " << std::fixed << std::setprecision(2) << percentage << "% complete" << std::flush;
+				}
 			}
-			};
+		};
 
 		// Determine the number of threads to use
 		int num_threads = 0.5 * std::thread::hardware_concurrency();
