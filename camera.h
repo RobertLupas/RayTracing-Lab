@@ -96,7 +96,7 @@ public:
 		time(&end);
 		double time_taken = double(end - start);
 
-		std::clog << "\rRender done in " << fixed << time_taken << setprecision(5) << ".                 \n";
+		std::clog << "\r\033[KRender done in " << fixed << time_taken << setprecision(2) << "s\n" << std::flush;
 
 		if (stbi_write_png("image.png", image_width, image_height, 3, image_data.data(), image_width * 3)) {
 			clog << "\nImage written to image.png\n";
