@@ -67,7 +67,8 @@ public:
 			};
 
 		// Determine the number of threads to use
-		int num_threads = std::thread::hardware_concurrency();
+		int num_threads = 0.5 * std::thread::hardware_concurrency();
+		num_threads = (num_threads < 1) ? 1 : num_threads;
 		int chunk_size = image_height / num_threads;
 
 		// Create and launch threads
