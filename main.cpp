@@ -11,75 +11,83 @@
 #include "plane.h"
 
 // Function to configure and add a sphere to the world based on user input
-void configureScene(hittable_list& world, bool manual) {
+void configureScene(hittable_list& world, bool manual)
+{
 	switch (manual)
 	{
-	case true: {
-		// User input for sphere properties
-		std::cout << "Enter sphere properties:\n";
+	case true:
+		{
+			// User input for sphere properties
+			std::cout << "Enter sphere properties:\n";
 
-		// Sphere position
-		vec3 center;
-		std::cout << "Center (x y z): ";
-		double x, y, z;
-		std::cin >> x >> y >> z;
-		center[0] = x;
-		center[1] = y;
-		center[2] = z;
+			// Sphere position
+			vec3 center;
+			std::cout << "Center (x y z): ";
+			double x, y, z;
+			std::cin >> x >> y >> z;
+			center[0] = x;
+			center[1] = y;
+			center[2] = z;
 
-		// Sphere radius
-		double radius;
-		std::cout << "Radius: ";
-		std::cin >> radius;
+			// Sphere radius
+			double radius;
+			std::cout << "Radius: ";
+			std::cin >> radius;
 
-		// Sphere color
-		color sphereColor;
-		std::cout << "Color (r g b): ";
-		std::cin >> x >> y >> z;
-		sphereColor[0] = x;
-		sphereColor[1] = y;
-		sphereColor[2] = z;
+			// Sphere color
+			color sphereColor;
+			std::cout << "Color (r g b): ";
+			std::cin >> x >> y >> z;
+			sphereColor[0] = x;
+			sphereColor[1] = y;
+			sphereColor[2] = z;
 
-		// Sphere material type
-		std::cout << "Material type (lambertian, dielectric, metal): ";
-		std::string materialType;
-		std::cin >> materialType;
+			// Sphere material type
+			std::cout << "Material type (lambertian, dielectric, metal): ";
+			std::string materialType;
+			std::cin >> materialType;
 
-		std::shared_ptr<material> sphereMaterial;
+			std::shared_ptr<material> sphereMaterial;
 
-		if (materialType == "lambertian") {
-			sphereMaterial = std::make_shared<lambertian>(sphereColor);
+			if (materialType == "lambertian")
+			{
+				sphereMaterial = std::make_shared<lambertian>(sphereColor);
+			}
+			else if (materialType == "dielectric")
+			{
+				sphereMaterial = std::make_shared<dielectric>(1.50); // Refractive index for dielectric
+			}
+			else if (materialType == "metal")
+			{
+				sphereMaterial = std::make_shared<metal>(sphereColor, 1.0); // Metal with fuzziness
+			}
+			else
+			{
+				std::cerr << "Unknown material type. Using Lambertian by default.\n";
+				sphereMaterial = std::make_shared<lambertian>(sphereColor);
+			}
+
+			// Add the sphere to the world
+			world.add(std::make_shared<sphere>(center, radius, sphereMaterial));
+			break;
 		}
-		else if (materialType == "dielectric") {
-			sphereMaterial = std::make_shared<dielectric>(1.50); // Refractive index for dielectric
-		}
-		else if (materialType == "metal") {
-			sphereMaterial = std::make_shared<metal>(sphereColor, 1.0); // Metal with fuzziness
-		}
-		else {
-			std::cerr << "Unknown material type. Using Lambertian by default.\n";
-			sphereMaterial = std::make_shared<lambertian>(sphereColor);
-		}
+	case false:
+		{
+			auto material_center = make_shared<metal>(color(0.9, 0.9, 0.9), 0.0);
+			auto material_2 = make_shared<lambertian>(color(0.1, 0.2, 0.5));
 
-		// Add the sphere to the world
-		world.add(std::make_shared<sphere>(center, radius, sphereMaterial));
-		break;
-	}
-	case false: {
-		auto material_center = make_shared<metal>(color(0.9, 0.9, 0.9), 0.0);
-		auto material_2 = make_shared<lambertian>(color(0.1, 0.2, 0.5));
+			world.add(make_shared<cube>(vec3(-0.5, -0.5, -0.5), vec3(0.5, 0.5, 0.5), material_center));
+			world.add(make_shared<sphere>(vec3(0.0, 0.9, 0.0), 0.3, material_2));
 
-		world.add(make_shared<cube>(vec3(-0.5, -0.5, -0.5), vec3(0.5, 0.5, 0.5), material_center));
-		world.add(make_shared<sphere>(vec3(0.0, 0.9, 0.0), 0.3, material_2));
+			world.add(make_shared<sphere>(vec3(-1.5, 0.4, -2.5), 0.3, material_center));
 
-		world.add(make_shared<sphere>(vec3(-1.5, 0.4, -2.5), 0.3, material_center));
-		
-		break;
-	}
+			break;
+		}
 	}
 }
 
-int main() {
+int main()
+{
 	hittable_list world;
 
 	auto material_ground = make_shared<lambertian>(color(0.1, 0.6, 0.1));

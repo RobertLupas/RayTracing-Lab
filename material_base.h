@@ -5,15 +5,17 @@
 
 class hit_record;
 
-class material {
+class material
+{
 public:
-    virtual ~material() = default;
+	virtual ~material() = default;
 
-    virtual bool scatter(
-        const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
-    ) const {
-        return false;
-    }
+	virtual bool scatter(
+		const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
+	) const
+	{
+		return false;
+	}
 };
 
 #endif
