@@ -66,11 +66,13 @@ void configureScene(hittable_list& world, bool manual) {
 		break;
 	}
 	case false: {
-		auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
+		auto material_center = make_shared<metal>(color(0.9, 0.9, 0.9), 0.0);
+		auto material_2 = make_shared<lambertian>(color(0.1, 0.2, 0.5));
 
 		world.add(make_shared<cube>(vec3(-0.5, -0.5, -0.5), vec3(0.5, 0.5, 0.5), material_center));
+		world.add(make_shared<sphere>(vec3(0.0, 0.9, 0.0), 0.3, material_2));
 
-		world.add(make_shared<sphere>(vec3(0.0, 0.0, 0.0), 0.5, material_center));
+		world.add(make_shared<sphere>(vec3(-1.5, 0.4, -2.5), 0.3, material_center));
 		
 		break;
 	}
@@ -91,11 +93,11 @@ int main() {
 
 	cam.aspect_ratio = 16.0 / 9.0;
 	cam.image_width = 400;
-	cam.samples_per_pixel = 100;
+	cam.samples_per_pixel = 200;
 	cam.max_depth = 50;
 
 	cam.vfov = 20;
-	cam.lookfrom = vec3(3, 1.2, 4);
+	cam.lookfrom = vec3(4, 3.0, 3);
 	cam.lookat = vec3(0, 0.6, 0);
 	cam.vup = vec3(0, 1, 0);
 
