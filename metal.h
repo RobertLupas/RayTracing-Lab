@@ -6,7 +6,7 @@
 class metal : public material
 {
 public:
-	metal(const color& albedo, double fuzz) : albedo(albedo), fuzz(fuzz < 1 ? fuzz : 1)
+	metal(const color& albedo, const double fuzz) : albedo(albedo), fuzz(fuzz < 1 ? fuzz : 1)
 	{
 	}
 

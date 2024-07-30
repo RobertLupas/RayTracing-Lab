@@ -6,7 +6,7 @@
 
 using color = vec3;
 
-inline double linear_to_gamma(double linear_component)
+inline double linear_to_gamma(const double linear_component)
 {
 	if (linear_component > 0)
 		return sqrt(linear_component);
@@ -14,7 +14,7 @@ inline double linear_to_gamma(double linear_component)
 	return 0;
 }
 
-void write_color(unsigned char* buffer, int index, const color& pixel_color)
+void write_color(unsigned char* buffer, const int index, const color& pixel_color)
 {
 	auto r = pixel_color.x();
 	auto g = pixel_color.y();
@@ -27,9 +27,9 @@ void write_color(unsigned char* buffer, int index, const color& pixel_color)
 
 	// Translate the [0,1] component values to the byte range [0,255].
 	static const interval intensity(0.000, 0.999);
-	int rbyte = static_cast<int>(256 * intensity.clamp(r));
-	int gbyte = static_cast<int>(256 * intensity.clamp(g));
-	int bbyte = static_cast<int>(256 * intensity.clamp(b));
+	const int rbyte = static_cast<int>(256 * intensity.clamp(r));
+	const int gbyte = static_cast<int>(256 * intensity.clamp(g));
+	const int bbyte = static_cast<int>(256 * intensity.clamp(b));
 
 	// Write the color to the buffer at the specified index.
 	buffer[index] = rbyte;

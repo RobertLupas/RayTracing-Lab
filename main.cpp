@@ -11,7 +11,7 @@
 #include "plane.h"
 
 // Function to configure and add a sphere to the world based on user input
-void configureScene(hittable_list& world, bool manual)
+void configureScene(hittable_list& world, const bool manual)
 {
 	switch (manual)
 	{
@@ -94,7 +94,7 @@ int main()
 	world.add(make_shared<plane>(vec3(0, 0, 0), vec3(0, 1, 0), material_ground));
 
 	// Configure the scene based on user input
-	bool manual = false;
+	constexpr bool manual = false;
 	configureScene(world, manual);
 
 	camera cam;

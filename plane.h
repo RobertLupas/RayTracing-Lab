@@ -11,13 +11,13 @@ public:
 	{
 	}
 
-	bool hit(const ray& r, interval ray_t, hit_record& rec) const override
+	bool hit(const ray& r, const interval ray_t, hit_record& rec) const override
 	{
-		auto denom = dot(normal, r.direction());
+		const auto denom = dot(normal, r.direction());
 		if (fabs(denom) > 1e-6)
 		{
 			// Prevent division by zero
-			auto t = dot(p0 - r.origin(), normal) / denom;
+			const auto t = dot(p0 - r.origin(), normal) / denom;
 			if (ray_t.surrounds(t))
 			{
 				rec.t = t;

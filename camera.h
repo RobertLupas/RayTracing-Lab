@@ -48,7 +48,7 @@ public:
 		std::mutex log_mutex;
 		std::atomic<int> scanlines_processed(0);
 
-		auto render_chunk = [&](int start_row, int end_row)
+		auto render_chunk = [&](const int start_row, const int end_row)
 		{
 			for (int j = start_row; j < end_row; j++)
 			{
@@ -62,7 +62,7 @@ public:
 					}
 
 					// Calculate the index in the buffer for this pixel
-					int index = 3 * (j * image_width + i);
+					const int index = 3 * (j * image_width + i);
 
 					// Write the color to the buffer
 					std::lock_guard<std::mutex> lock(image_mutex);
@@ -76,7 +76,7 @@ public:
 				if (j % 10 == 0)
 				{
 					std::lock_guard<std::mutex> lock(log_mutex);
-					double percentage = (100.0 * scanlines_processed) / image_height;
+					const double percentage = (100.0 * scanlines_processed) / image_height;
 					std::clog << "\rProgress: " << std::fixed << std::setprecision(2) << percentage << "% complete" <<
 						std::flush;
 				}
@@ -86,7 +86,7 @@ public:
 		// Determine the number of threads to use
 		int num_threads = 0.5 * std::thread::hardware_concurrency();
 		num_threads = (num_threads < 1) ? 1 : num_threads;
-		int chunk_size = image_height / num_threads;
+		const int chunk_size = image_height / num_threads;
 
 		// Create and launch threads
 		std::vector<std::thread> threads;
@@ -104,7 +104,7 @@ public:
 		}
 
 		time(&end);
-		double time_taken = static_cast<double>(end - start);
+		const double time_taken = static_cast<double>(end - start);
 
 		std::clog << "\r\033[KRender done in " << fixed << time_taken << setprecision(2) << "s\n" << std::flush;
 
@@ -139,10 +139,10 @@ private:
 		center = lookfrom;
 
 		// Determine viewport dimensions.
-		auto theta = degrees_to_radians(vfov);
-		auto h = tan(theta / 2);
-		auto viewport_height = 2 * h * focus_dist;
-		auto viewport_width = viewport_height * (static_cast<double>(image_width) / image_height);
+		const auto theta = degrees_to_radians(vfov);
+		const auto h = tan(theta / 2);
+		const auto viewport_height = 2 * h * focus_dist;
+		const auto viewport_width = viewport_height * (static_cast<double>(image_width) / image_height);
 
 		// Calculate the u,v,w unit basis vectors for the camera coordinate frame.
 		w = unit_vector(lookfrom - lookat);
@@ -150,41 +150,41 @@ private:
 		v = cross(w, u);
 
 		// Calculate the vectors across the horizontal and down the vertical viewport edges.
-		vec3 viewport_u = viewport_width * u; // Vector across viewport horizontal edge
-		vec3 viewport_v = viewport_height * -v; // Vector down viewport vertical edge
+		const vec3 viewport_u = viewport_width * u; // Vector across viewport horizontal edge
+		const vec3 viewport_v = viewport_height * -v; // Vector down viewport vertical edge
 
 		// Calculate the horizontal and vertical delta vectors from pixel to pixel.
 		pixel_delta_u = viewport_u / image_width;
 		pixel_delta_v = viewport_v / image_height;
 
 		// Calculate the location of the upper left pixel.
-		auto viewport_upper_left = center - (focus_dist * w) - viewport_u / 2 - viewport_v / 2;
+		const auto viewport_upper_left = center - (focus_dist * w) - viewport_u / 2 - viewport_v / 2;
 		pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
 		// Calculate the camera defocus disk basis vectors.
-		auto defocus_radius = focus_dist * tan(degrees_to_radians(defocus_angle / 2));
+		const auto defocus_radius = focus_dist * tan(degrees_to_radians(defocus_angle / 2));
 		defocus_disk_u = u * defocus_radius;
 		defocus_disk_v = v * defocus_radius;
 	}
 
-	ray get_ray(int i, int j) const
+	ray get_ray(const int i, const int j) const
 	{
 		// Construct a camera ray originating from the defocus disk and directed at a randomly
 		// sampled point around the pixel location i, j.
 
-		auto offset = sample_square();
-		auto pixel_sample = pixel00_loc
+		const auto offset = sample_square();
+		const auto pixel_sample = pixel00_loc
 			+ ((i + offset.x()) * pixel_delta_u)
 			+ ((j + offset.y()) * pixel_delta_v);
 
-		auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
+		const auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
 
-		auto ray_direction = pixel_sample - ray_origin;
+		const auto ray_direction = pixel_sample - ray_origin;
 
 		return ray(ray_origin, ray_direction);
 	}
 
-	vec3 sample_square() const
+	static vec3 sample_square()
 	{
 		// Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
 		return vec3(random_double() - 0.5, random_double() - 0.5, 0);
@@ -197,7 +197,7 @@ private:
 		return center + (p[0] * defocus_disk_u) + (p[1] * defocus_disk_v);
 	}
 
-	color ray_color(const ray& r, int depth, const hittable& world) const
+	static color ray_color(const ray& r, const int depth, const hittable& world)
 	{
 		// If we've exceeded the ray bounce limit, no more light is gathered.
 		if (depth <= 0)
@@ -211,11 +211,11 @@ private:
 			color attenuation;
 			if (rec.mat->scatter(r, rec, attenuation, scattered))
 				return attenuation * ray_color(scattered, depth - 1, world);
-			return color(0, 0, 0);
+			return vec3(0, 0, 0);
 		}
 
-		vec3 unit_direction = unit_vector(r.direction());
-		auto a = 0.5 * (unit_direction.y() + 1.0);
+		const vec3 unit_direction = unit_vector(r.direction());
+		const auto a = 0.5 * (unit_direction.y() + 1.0);
 		return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
 	}
 };
