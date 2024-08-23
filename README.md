@@ -1,5 +1,5 @@
 # RayTracing Lab
-A simple ray tracer made in C++ that I'm working on.
+A simple ray tracing rendering engine made in C++ that I'm working on. It's just a hobby project (for now), and not an actual "product".
 
 DOCS COMING SOON!
 
